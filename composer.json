@@ -1,0 +1,21 @@
+{
+    "name": "almhdy/simy",
+    "description": "simple php mvc framework .",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Almhdy\\Simy\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Elmahdi Abdallh"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "vlucas/phpdotenv": "^5.6@dev",
+        "illuminate/database": "^11.0@dev"
+    }
+}
