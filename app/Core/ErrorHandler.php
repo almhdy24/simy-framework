@@ -1,19 +1,22 @@
 <?php
+
 namespace Almhdy\Simy\Core;
+
+use Almhdy\Simy\Core\Log\Log;
 
 final class ErrorHandler
 {
+	// Determine the environment based on the configuration
 	private static function getEnv(): string
 	{
-		
 		if (isset($_ENV["ENV"]) && $_ENV["ENV"] === "development") {
-			$env = "development";
+			return "development";
 		} else {
-			$env = "production";
+			return "production";
 		}
-		return $env;
 	}
 
+	// Enable error handling by setting error, exception, and shutdown handlers
 	public static function enableErrorHandling(): void
 	{
 		set_error_handler([self::class, "errorHandler"]);
@@ -21,6 +24,7 @@ final class ErrorHandler
 		register_shutdown_function([self::class, "shutdownHandler"]);
 	}
 
+	// Handle PHP errors
 	public static function errorHandler(
 		int $errno,
 		string $errstr,
@@ -29,18 +33,19 @@ final class ErrorHandler
 	): bool {
 		$env = self::getEnv();
 		if ($env === "development" && error_reporting() & $errno) {
-			self::handleErrorDetails($errstr, $errfile, $errline, $env);
+			self::handleErrorAndLog($errstr, $errfile, $errline, $env);
 			return true;
 		} elseif ($env === "production") {
-			self::handleErrorDetails("", "", "");
+			self::handleErrorAndLog("", "", "");
 			return true;
 		}
 		return false; // Let PHP handle the error
 	}
 
+	// Handle exceptions
 	public static function exceptionHandler(\Throwable $exception): void
 	{
-		self::handleErrorDetails(
+		self::handleErrorAndLog(
 			$exception->getMessage(),
 			$exception->getFile(),
 			$exception->getLine(),
@@ -48,11 +53,12 @@ final class ErrorHandler
 		);
 	}
 
+	// Handle shutdown errors
 	public static function shutdownHandler(): void
 	{
 		$lastError = error_get_last();
 		if (!empty($lastError)) {
-			self::handleErrorDetails(
+			self::handleErrorAndLog(
 				$lastError["message"],
 				$lastError["file"],
 				$lastError["line"]
@@ -60,31 +66,32 @@ final class ErrorHandler
 		}
 	}
 
-	protected static function handleErrorDetails(
+	// Handle error details and log to file
+	protected static function handleErrorAndLog(
 		string $errstr,
 		string $errfile,
 		int $errline
 	): void {
-		$env = self::getEnv();
-		if ($env === "development") {
-			self::renderErrorView(
-				500,
-				"An error occurred: $errstr",
-				"File: $errfile, Line: $errline"
-			);
-		} else {
-			self::renderErrorView(
-				500,
-				"Something went wrong. Please try again later."
-			);
-		}
+		//$logPath = $_ENV["BASE_DIR"] . "/Logs/" . date("Y-m-d") . "_error.log";
+		$logPath = "../Logs/" . date("Y-m-d") . "_error.log";
+
+		// Log the error message and details to the log file
+		Log::log("Error: $errstr in $errfile at line $errline", "ERROR", $logPath);
+
+		// Render error view based on environment
+		self::renderErrorView();
 	}
 
-	protected static function renderErrorView(
-		int $statusCode,
-		string $message,
-		string $details = ""
-	): void {
+	// Render error view based on environment
+	protected static function renderErrorView(): void
+	{
+		$env = self::getEnv();
+		$statusCode = 500;
+		$message =
+			$env === "development"
+				? "An error occurred"
+				: "Something went wrong. Please try again later.";
+
 		http_response_code($statusCode);
 		require_once "../app/Views/errors/$statusCode.php";
 		exit();

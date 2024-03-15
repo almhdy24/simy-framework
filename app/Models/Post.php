@@ -1,8 +1,8 @@
 <?php
 namespace Almhdy\Simy\Models;
 use Almhdy\Simy\Core\Model;
-class User extends Model
+class Post extends Model
 {
-	protected $table = "users";
+	protected $table = "posts";
 	
 }

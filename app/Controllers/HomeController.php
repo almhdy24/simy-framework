@@ -2,17 +2,16 @@
 namespace Almhdy\Simy\Controllers;
 use Almhdy\Simy\Core\Controller;
 use Almhdy\Simy\Models\User;
+use Almhdy\Simy\Core\Request;
 
 class HomeController extends Controller
 {
 	public function index()
 	{
-		$user = new User();
-		echo "<pre>";
-
-		var_dump($user->all());
-		echo "</pre>";
-		 //$this->view("home/index");
+		//$this->view("home/index");
+	   $data = (new Request())->request();
+	   var_dump($i);
+	    
 	}
 	public function info()
 	{

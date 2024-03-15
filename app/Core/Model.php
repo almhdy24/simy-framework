@@ -1,31 +1,42 @@
 <?php
 namespace Almhdy\Simy\Core;
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
-use Almhdy\Simy\Core\Database;
+use Almhdy\Simy\Core\Database\Query;
+use Almhdy\Simy\Core\Database\Connection;
 
-class Model extends EloquentModel
+class Model
 {
-    protected $table; // Specify the table name
-    protected $database;
+	protected $query;
+	protected $table;
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        $this->database = new Database;
-    }
+	public function __construct()
+	{
+		$this->query = new Query(new Connection);
+	}
 
-    // You can specify the table name in the child models
-    // protected $table = 'your_table_name';
+	public function all()
+	{
+		return $this->query->selectAll($this->table);
+	}
 
-    // The methods like find, findWhere, findAll, create, update, and delete are already provided by Eloquent
-    // You don't need to redefine them
+	public function find($id)
+	{
+		return $this->query->selectOne($this->table, $id);
+	}
 
-    // You can add any additional methods or customize Eloquent queries in your child models
+	public function save($data)
+	{
+		if (isset($data["id"])) {
+			$id = $data["id"];
+			unset($data["id"]);
+			return $this->query->update($this->table, $data, $id);
+		} else {
+			return $this->query->insert($this->table, $data);
+		}
+	}
 
-    // Example of an additional custom method
-    public function customMethod()
-    {
-        // Your custom logic here
-    }
+	public function delete($id)
+	{
+		return $this->query->delete($this->table, $id);
+	}
 }
