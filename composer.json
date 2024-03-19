@@ -1,5 +1,6 @@
 {
     "name": "almhdy/simy",
+    "version": "0.1 beta",
     "description": "simple php mvc framework .",
     "type": "project",
     "license": "MIT",

@@ -36,7 +36,7 @@ class Connection
 
 		$dbConfig = [
 			"host" => $dbHost,
-			"port"=>$dbPort,
+			"port" => $dbPort,
 			"database" => $dbName,
 			"username" => $dbUser,
 			"password" => $dbPass,
@@ -80,7 +80,6 @@ class Connection
 
 			if ($isConnected) {
 				return $driver; // Return the connected driver for use
-			    
 			} else {
 				throw new \Exception("Failed to connect to the database");
 			}
@@ -91,6 +90,4 @@ class Connection
 			throw new \Exception($e->getMessage());
 		}
 	}
-
-	// The disconnect method remains the same
 }

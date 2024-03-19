@@ -11,7 +11,7 @@ $base_url = $_ENV["base_url"]; ?>
 <body>
     <div class="container">
         <h1>403 - FORBIDDEN</h1>
-        <p>Permission was denied !.</p>
+        <h3>Permission was denied !.</h3>
         <a href="/">Go to Homepage</a>
     </div>
 </body>

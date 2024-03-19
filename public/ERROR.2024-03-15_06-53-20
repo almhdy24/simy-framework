@@ -1,6 +1,0 @@
-[2024-03-15 06:50:48] [__DIR__/Logs/2024-03-15_error.log]: Error: Attempt to read property "ali" on array in /storage/emulated/0/www/simy_framework/app/Controllers/HomeController.php at line 13
-[2024-03-15 06:50:48] [__DIR__/Logs/2024-03-15_error.log]: Error: Undefined variable $details in /storage/emulated/0/www/simy_framework/app/Views/errors/500.php at line 16
-[2024-03-15 06:51:02] [__DIR__/Logs/2024-03-15_error.log]: Error: Attempt to read property "ali" on array in /storage/emulated/0/www/simy_framework/app/Controllers/HomeController.php at line 13
-[2024-03-15 06:51:02] [__DIR__/Logs/2024-03-15_error.log]: Error: Undefined variable $details in /storage/emulated/0/www/simy_framework/app/Views/errors/500.php at line 16
-[2024-03-15 06:51:17] [__DIR__/Logs/2024-03-15_error.log]: Error: Undefined variable $i in /storage/emulated/0/www/simy_framework/app/Controllers/HomeController.php at line 13
-[2024-03-15 06:51:17] [__DIR__/Logs/2024-03-15_error.log]: Error: Undefined variable $details in /storage/emulated/0/www/simy_framework/app/Views/errors/500.php at line 16

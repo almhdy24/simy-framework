@@ -1,5 +1,3 @@
-/* error.css */
-
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -53,5 +51,16 @@ a:hover {
   
   p {
     font-size: 4vw;
+    margin-bottom: 15px;
   }
+  
+  .container {
+    padding: 15px;
+  }
+}
+
+details {
+  max-height: 150px; /* Set max height for details section */
+  overflow: auto; /* Enable scrolling for long content */
+  word-wrap: break-word; /* Break words when necessary */
 }

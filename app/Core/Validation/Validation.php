@@ -1,5 +1,5 @@
-```php
-<?php namespace Almhdy\Simy\Core\Validation;
+<?php
+namespace Almhdy\Simy\Core\Validation;
 
 /**
  * Class Validation
@@ -137,7 +137,7 @@ class Validation
 	 *
 	 * @return array Returns an array of validation errors
 	 */
-	public function errors(): array
+	public function getErrors(): array
 	{
 		return $this->errors;
 	}

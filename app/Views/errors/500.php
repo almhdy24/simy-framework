@@ -6,14 +6,13 @@ $base_url = $_ENV["base_url"]; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Internal Server Error</title>
-    <link rel="stylesheet" href="<?=$base_url?>assets/css/error.css">
+    <link rel="stylesheet" href="<?= $base_url ?>assets/css/error.css">
 </head>
 <body>
     <div class="container">
         <h1>500 - Internal Server Error</h1>
-        <p>Oops! Something went wrong.</p>
-        <p><?php echo $message; ?></p>
-        <p><?php echo $details; ?></p>
+        <h3><?php echo $message; ?></h3>
+        <details><?php echo $details; ?></details>
         <a href="/">Go to Homepage</a>
     </div>
 </body>

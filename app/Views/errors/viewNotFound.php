@@ -15,7 +15,7 @@ $base_url = (new Constants())::base_url;
         
         <h1>View was not found !</h1>
         
-         <p><strong>View</strong> : <code><?= $view ?></code></p>
+         <h3><strong>View</strong> : <code><?= $view ?></code></h3>
         <a href="/">Go to Homepage</a>
     </div>
 </body>

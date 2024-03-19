@@ -2,37 +2,41 @@
 
 namespace Almhdy\Simy\Core\Log;
 
-class Log
+final class Log
 {
-    protected $logFile;
     protected $maxFileSize = 1048576; // 1 MB
 
-    public function __construct(string $logFile)
+        // Log the message to the specified log file
+    public static function log(string $message, string $level, string $logPath): void
     {
-        $this->logFile = $logFile;
+        self::createLogFileDirectory($logPath);
+
+        $timestamp = date("Y-m-d H:i:s");
+        $logMessage = "[$timestamp] [$level]: $message" . PHP_EOL;
+        
+        file_put_contents($logPath, $logMessage, FILE_APPEND);
     }
 
-public static function log(string $message, string $logFile, string $level = 'INFO'): void
-{
-    $timestamp = date('[Y-m-d H:i:s]');
-    $logMessage = "$timestamp [$level]: $message\n";
-
-    self::rotateLogFile($logFile);
-
-    file_put_contents($logFile, $logMessage, FILE_APPEND );
-}
-
-private static function rotateLogFile(string $logFile): void
-{
-    // Set maximum file size and log file path here or as parameters in the method
-    $maxFileSize = 1024; // Example maximum file size in bytes
-
-    clearstatcache(true, $logFile);
-    if (file_exists($logFile) && filesize($logFile) > $maxFileSize) {
-        rename($logFile, $logFile . '.' . date('Y-m-d_H-i-s'));
-        touch($logFile);
+    // Create the log file directory if it doesn't exist
+    private static function createLogFileDirectory(string $logPath): void
+    {
+        $logDir = dirname($logPath);
+        if (!is_dir($logDir)) {
+            mkdir($logDir, 0755, true);
+        }
     }
-}
+
+    private static function rotateLogFile(string $logFile): void
+    {
+        $maxFileSize = 1048576; // 1 MB
+
+        clearstatcache(true, $logFile);
+        if (file_exists($logFile) && filesize($logFile) > $maxFileSize) {
+            rename($logFile, $logFile . '_' . date('Y-m-d_H-i-s'));
+            touch($logFile);
+        }
+    }
+
     public function setMaxFileSize(int $maxFileSize)
     {
         $this->maxFileSize = $maxFileSize;

@@ -72,28 +72,34 @@ final class ErrorHandler
 		string $errfile,
 		int $errline
 	): void {
-		//$logPath = $_ENV["BASE_DIR"] . "/Logs/" . date("Y-m-d") . "_error.log";
-		$logPath = "../Logs/" . date("Y-m-d") . "_error.log";
+		$logPath = dirname(__DIR__) . "/Logs/" . date("Y-m-d") . "_error.log";
 
 		// Log the error message and details to the log file
 		Log::log("Error: $errstr in $errfile at line $errline", "ERROR", $logPath);
 
-		// Render error view based on environment
-		self::renderErrorView();
+		// Define the error message and details
+		$message = "An error occurred";
+		$details = "Error: $errstr in $errfile at line $errline"; // Include specific error details
+
+		// Render error view based on environment and pass message and details
+		self::renderErrorView($message, $details);
 	}
 
 	// Render error view based on environment
-	protected static function renderErrorView(): void
-	{
+	protected static function renderErrorView(
+		string $message,
+		string $details
+	): void {
 		$env = self::getEnv();
 		$statusCode = 500;
-		$message =
-			$env === "development"
-				? "An error occurred"
-				: "Something went wrong. Please try again later.";
 
-		http_response_code($statusCode);
-		require_once "../app/Views/errors/$statusCode.php";
-		exit();
+		if (file_exists("../app/Views/errors/$statusCode.php")) {
+			http_response_code($statusCode);
+
+			// Pass $message and $details to the error view
+			require_once "../app/Views/errors/$statusCode.php";
+
+			exit();
+		}
 	}
 }
