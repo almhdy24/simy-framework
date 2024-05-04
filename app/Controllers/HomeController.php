@@ -30,7 +30,7 @@ class HomeController extends Controller
 			// Data is valid, continue with your logic
 		} else {
 			$errors = $validator->getErrors();
-			var_dump($errors);
+			var_dump($error|s);
 			// Handle errors or display them to the user
 		}
 	}

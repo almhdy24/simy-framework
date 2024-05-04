@@ -42,7 +42,7 @@ class Controller
 		header_remove(); // Remove previously set headers
 		http_response_code($statusCode); // Set HTTP response code
 		header("Content-Type: application/json"); // Set content type to JSON
-		header("powered-by: Simy Framework"); // Set custom header
+		header("powered-by: Simy Framework V1"); // Set custom header
 		echo json_encode($data); // Encode data array to JSON and output
 		exit(); // Exit to stop further execution
 	}
