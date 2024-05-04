@@ -43,3 +43,60 @@ hr {
     border: 0;
     border-top: 1px solid #ccc;
 }
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+input,
+textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* Add transition for background-color effect */
+}
+
+button:hover {
+    background-color: #ffcc00; /* Change background color on hover */
+}
+
+
+/* tailwind class */
+.text-sm {
+    font-size: 0.875rem; /* 14px (assuming the base font size is 16px) */
+}
+
+.text-white {
+    color: #fff;
+}
+
+.text-center {
+    text-align: center;
+}
+/* Default link styles */
+a {
+    color: #3490dc; /* Tailwind blue-500 */
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #2779bd; /* Tailwind blue-600 */
+}
+
+a:focus {
+    outline: none; /* Removing default focus outline */
+}

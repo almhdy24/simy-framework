@@ -6,5 +6,7 @@ use Almhdy\Simy\Core\Validation\Validation;
 
 class UserController extends Controller
 {
-  
+  public function login(){
+    echo "login....";
+  }
 }

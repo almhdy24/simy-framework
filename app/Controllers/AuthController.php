@@ -1,24 +1,31 @@
 <?php
-namespace Almhdy\Simy\Controller;
+namespace Almhdy\Simy\Controllers;
 
-use Almhdy\Core\Controller;
-use Almhdy\Models\User;
-use Almhdy\Controllers\UserController;
+use Almhdy\Simy\Core\Controller;
+use Almhdy\Simy\Controllers\UserController;
 use Almhdy\Simy\Core\Validation\Validation;
-use Almhdy\Simy\Core\Sesdion\SessionManager;
+use Almhdy\Simy\Core\Session\SessionManager;
+use Almhdy\Simy\Models\User;
 
 class AuthController extends Controller
 {
-  private $user;
-  private $sessionManager;
-  public function __construct(User $user)
+  private $user = null;
+  private $sessionManager = null;
+  public function __construct(User $user = null)
   {
-    $this->user = $user;
-    $this->SessionManager = new SessionManager();
+    $this->user = null;
+    $this->sessionManager = new SessionManager();
   }
 
-  public function auth($email, $password)
+  public function login()
   {
+    $this->view("templates/header");
+    $this->view("auth/login");
+  }
+  public function auth()
+  {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
     // Validate the input
     $validator = new Validation();
     $data = ["email" => $email, "password" => $password];
@@ -37,18 +44,22 @@ class AuthController extends Controller
     if ($isValid) {
       // Check if user exists with the provided email
       $user = new User();
-      $user = $user->where(["email" => ~$email]);
+      //var_dump($user->all());
+      $dd = $user->customQuery("SELECT * FROM users  where email = $email");
+var_dump($dd);
+      die();
+      $user = $user->where(["email" => $email]);
       if ($user) {
         // Verify the password
         if (password_verify($user["password"], $password)) {
           // Set session if authentication is successful
-          $this->SessionManager->startSession();
+          $this->sessionManager->startSession();
           // define user data array
           $userData = [
             "id" => $user["id"],
             "email" => $user["email"],
           ];
-          $this->SessionManager->setSessionData($userData);
+          $this->sessionManager->setSessionData($userData);
           $this->redirect("/home");
         }
         $errors = "incoorect data ";
@@ -57,9 +68,7 @@ class AuthController extends Controller
       return false;
     } else {
       $errors = $validator->getErrors();
-        $this->view("Auth/login", $errors);
-
-
+      $this->view("Auth/login", $errors);
     }
   }
 

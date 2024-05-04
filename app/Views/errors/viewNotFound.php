@@ -1,6 +1,5 @@
 <?php
-use Almhdy\Simy\Core\Constants;
-$base_url = (new Constants())::base_url;
+$base_url = $_ENV["base_url"];
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1,1 +1,32 @@
 [2024-05-04 07:29:39] [ERROR]: Error: Undefined constant "Almhdy\Simy\Controllers\s" in /storage/emulated/0/www/simy-framework/app/Controllers/HomeController.php at line 33
+[2024-05-04 08:06:46] [ERROR]: Error: Too few arguments to function {closure}(), 0 passed in /storage/emulated/0/www/simy-framework/app/Core/Router.php on line 97 and exactly 1 expected in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 10
+[2024-05-04 08:07:17] [ERROR]: Error: Too few arguments to function {closure}(), 0 passed in /storage/emulated/0/www/simy-framework/app/Core/Router.php on line 97 and exactly 1 expected in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 10
+[2024-05-04 08:09:22] [ERROR]: Error: Too few arguments to function {closure}(), 0 passed in /storage/emulated/0/www/simy-framework/app/Core/Router.php on line 97 and exactly 1 expected in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 10
+[2024-05-04 08:10:07] [ERROR]: Error: Undefined variable $router in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:19:47] [ERROR]: Error: Undefined variable $router in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:20:27] [ERROR]: Error: Using $this when not in object context in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:20:48] [ERROR]: Error: Using $this when not in object context in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:23:24] [ERROR]: Error: Undefined variable $id in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:24:09] [ERROR]: Error: Using $this when not in object context in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:24:19] [ERROR]: Error: Undefined variable $params in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:26:04] [ERROR]: Error: Undefined variable $router in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:26:30] [ERROR]: Error: Undefined variable $router in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:26:30] [ERROR]: Error: http_response_code(): Cannot set response code - headers already sent (output started at /storage/emulated/0/www/simy-framework/app/Routes/Routes.php:10) in /storage/emulated/0/www/simy-framework/app/Core/ErrorHandler.php at line 97
+[2024-05-04 08:26:56] [ERROR]: Error: Undefined variable $router in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 11
+[2024-05-04 08:26:56] [ERROR]: Error: http_response_code(): Cannot set response code - headers already sent (output started at /storage/emulated/0/www/simy-framework/app/Routes/Routes.php:10) in /storage/emulated/0/www/simy-framework/app/Core/ErrorHandler.php at line 97
+[2024-05-04 08:27:25] [ERROR]: Error: Undefined variable $id in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 10
+[2024-05-04 08:58:05] [ERROR]: Error: Undefined constant "Almhdy\Simy\Controllers\s" in /storage/emulated/0/www/simy-framework/app/Controllers/HomeController.php at line 33
+[2024-05-04 13:53:07] [ERROR]: Error: Class "Almhdy\Core\Controller" not found in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 10
+[2024-05-04 13:53:46] [ERROR]: Error: Class "Almhdy\Core\Controller" not found in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 10
+[2024-05-04 13:54:39] [ERROR]: Error: Class "Almhdy\Core\Controller" not found in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 10
+[2024-05-04 13:55:34] [ERROR]: Error: Class "Almhdy\Simy\Core\Sesdion\SessionManager" not found in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 17
+[2024-05-04 13:55:57] [ERROR]: Error: Creation of dynamic property Almhdy\Simy\Controllers\AuthController::$SessionManager is deprecated in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 17
+[2024-05-04 13:58:22] [ERROR]: Error: Creation of dynamic property Almhdy\Simy\Controllers\AuthController::$SessionManager is deprecated in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 17
+[2024-05-04 13:58:36] [ERROR]: Error: Too few arguments to function Almhdy\Simy\Controllers\AuthController::__construct(), 0 passed in /storage/emulated/0/www/simy-framework/app/Core/Router.php on line 105 and exactly 1 expected in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 14
+[2024-05-04 13:58:58] [ERROR]: Error: Creation of dynamic property Almhdy\Simy\Controllers\AuthController::$SessionManager is deprecated in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 17
+[2024-05-04 14:03:05] [ERROR]: Error: Class "Almhdy\Simy\Core\Constants" not found in /storage/emulated/0/www/simy-framework/app/Views/errors/viewNotFound.php at line 3
+[2024-05-04 14:05:52] [ERROR]: Error: Undefined variable $base_url in /storage/emulated/0/www/simy-framework/app/Views/templates/header.php at line 11
+[2024-05-04 14:05:52] [ERROR]: Error: http_response_code(): Cannot set response code - headers already sent (output started at /storage/emulated/0/www/simy-framework/app/Views/templates/header.php:1) in /storage/emulated/0/www/simy-framework/app/Core/ErrorHandler.php at line 97
+[2024-05-04 14:09:45] [ERROR]: Error: Undefined array key "POST" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 47
+[2024-05-04 14:13:46] [ERROR]: Error: Too few arguments to function Almhdy\Simy\Controllers\AuthController::auth(), 0 passed and exactly 2 expected in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 25
+[2024-05-04 14:39:12] [ERROR]: Error: Undefined constant "Almhdy\Simy\Controllers\user" in /storage/emulated/0/www/simy-framework/app/Controllers/AuthController.php at line 48
