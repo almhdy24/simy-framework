@@ -1,0 +1,2 @@
+[2024-05-05 09:53:52] [ERROR]: Error: Almhdy\Simy\Core\Router::isMatchingRoute(): Return value must be of type bool, none returned in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 78
+[2024-05-05 09:54:26] [ERROR]: Error: Almhdy\Simy\Core\Router::isMatchingRoute(): Return value must be of type ?bool, none returned in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 78

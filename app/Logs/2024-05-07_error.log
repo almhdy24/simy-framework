@@ -1,0 +1,1 @@
+[2024-05-07 08:21:16] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$currentRoute in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 154

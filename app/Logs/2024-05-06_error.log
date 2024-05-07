@@ -1,0 +1,6 @@
+[2024-05-06 12:04:05] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$ in /storage/emulated/0/www/simy-framework/app/Routes/Routes.php at line 27
+[2024-05-06 16:30:47] [ERROR]: Error: Too few arguments to function Almhdy\Simy\Core\Router::applyMiddleware(), 0 passed in /storage/emulated/0/www/simy-framework/app/Core/Router.php on line 168 and exactly 1 expected in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 119
+[2024-05-06 16:30:48] [ERROR]: Error: http_response_code(): Cannot set response code - headers already sent (output started at /storage/emulated/0/www/simy-framework/app/Routes/Routes.php:20) in /storage/emulated/0/www/simy-framework/app/Core/ErrorHandler.php at line 97
+[2024-05-06 16:30:48] [ERROR]: Error: http_response_code(): Cannot set response code - headers already sent (output started at /storage/emulated/0/www/simy-framework/app/Routes/Routes.php:20) in /storage/emulated/0/www/simy-framework/app/Core/ErrorHandler.php at line 97
+[2024-05-06 16:53:07] [ERROR]: Error: Call to undefined method Almhdy\Simy\Middlewares\AuthMiddleware::handle() in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 124
+[2024-05-06 16:54:44] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$request in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 124
