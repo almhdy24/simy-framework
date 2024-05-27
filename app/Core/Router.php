@@ -4,10 +4,9 @@ namespace Almhdy\Simy\Core;
 
 class Router
 {
-  private array $routes = [];
+  // private array $routes = [];
+  public array $routes = [];
   public array $params = [];
-  public array $middleware = [];
-  public array $routeMiddleware = [];
 
   // Define a route for GET HTTP method with optional middleware
   public function get(string $uri, mixed $handler, array $middlewares = [])
@@ -33,22 +32,11 @@ class Router
     $this->addRoute("DELETE", $uri, $handler, $middlewares);
   }
 
-  // Set middleware for all routes
-  public function middleware(array $middlewares)
+  // Create a new route with the HTTP method, URI and handler
+  private function addRoute(string $httpMethod, string $uri, mixed $handler)
   {
-    $this->middleware = $middlewares;
-  }
-
-  // Create a new route with the HTTP method, URI, handler, and middlewares
-  private function addRoute(
-    string $httpMethod,
-    string $uri,
-    mixed $handler,
-    array $middlewares
-  ) {
     $this->routes[$httpMethod][$uri] = [
       "handler" => $handler,
-      "middlewares" => $middlewares,
     ];
   }
 
@@ -58,7 +46,6 @@ class Router
     $handlerData = $this->findMatchingRoute($uri, $httpMethod);
 
     if ($handlerData) {
-      $this->applyMiddleware($handlerData["middlewares"]);
       $this->callHandler($handlerData["handler"]);
     } else {
       $this->handleNotFound();
@@ -67,15 +54,17 @@ class Router
 
   // Find the matching route for the given URI and HTTP method
   private function findMatchingRoute(string $uri, string $httpMethod): ?array
-{
+  {
+    if (empty($this->routes[$httpMethod])) {
+      return null;
+    }
     foreach ($this->routes[$httpMethod] as $route => $data) {
-        if ($this->isMatchingRoute($route, $uri)) {
-            $this->applyRouteMiddleware($route); // Apply route-specific middleware
-            return $data;
-        }
+      if ($this->isMatchingRoute($route, $uri)) {
+        return $data;
+      }
     }
     return null;
-}
+  }
 
   // Check if the provided URI matches the route pattern
   private function isMatchingRoute(string $route, string $uri): bool
@@ -113,66 +102,29 @@ class Router
       return true;
     }
 
-    return false;
-  }
-
-  // Apply middleware before executing the handler
-  private function applyMiddleware(array $middlewares)
-  {
-    foreach ($middlewares as $middleware) {
-      // Call the handle method of each middleware instance
-      $middleware->handle($this->request, function ($request) {
-        $this->handle($request); // Execute the route handler or next middleware
-      });
-    }
-  }
-
-  // Set middleware for a specific route
-  public function routeMiddleware(string $route, array $middlewares)
-  {
-    if (!isset($this->routeMiddleware[$route])) {
-      $this->routeMiddleware[$route] = [];
-    }
-    $this->routeMiddleware[$route] = array_merge(
-      $this->routeMiddleware[$route],
-      $middlewares
-    );
-  }
-
-  // Apply middleware for a specific route
-  public function applyRouteMiddleware(string $route)
-  {
-    if (isset($this->routeMiddleware[$route])) {
-      $this->applyMiddleware($this->routeMiddleware[$route]);
-    }
+    return true;
   }
 
   // Call the appropriate handler based on its type
   private function callHandler(mixed $handler)
-{
-    // Check if middleware is set for the current route
-    $middlewares = $this->routeMiddleware[$this->currentRoute] ?? [];
-
-    // Apply middleware before calling the actual handler
-    $this->applyMiddleware($middlewares, function () use ($handler) {
-        if (is_callable($handler)) {
-            // If the handler is a callable function, just call the function
-            $handler();
-        } elseif (
-            is_array($handler) &&
-            count($handler) == 2 &&
-            class_exists($handler[0]) &&
-            method_exists($handler[0], $handler[1])
-        ) {
-            // If the handler is a controller and method, call the method on the controller
-            [$controllerClass, $method] = $handler;
-            $controller = new $controllerClass();
-            call_user_func_array([$controller, $method], $this->params);
-        } else {
-            $this->handleNotFound();
-        }
-    });
-}
+  {
+    if (is_callable($handler)) {
+      // If the handler is a callable function, just call the function
+      $handler();
+    } elseif (
+      is_array($handler) &&
+      count($handler) == 2 &&
+      class_exists($handler[0]) &&
+      method_exists($handler[0], $handler[1])
+    ) {
+      // If the handler is a controller and method, call the method on the controller
+      [$controllerClass, $method] = $handler;
+      $controller = new $controllerClass();
+      call_user_func_array([$controller, $method], $this->params);
+    } else {
+      $this->handleNotFound();
+    }
+  }
 
   // Handle the case when no matching route is found
   private function handleNotFound()
@@ -180,4 +132,13 @@ class Router
     http_response_code(404);
     require "../app/Views/errors/404.php";
   }
+  public function addResource($resourceName, $handler)
+  {
+    $this->get("/$resourceName/{id}", [$handler, "show"]);
+    $this->get("/$resourceName", [$handler, "index"]);
+    $this->post("/$resourceName", [$handler, "store"]);
+    $this->put("/$resourceName/{id}", [$handler, "update"]);
+    $this->delete("/$resourceName/{id}", [$handler, "delete"]);
+  }
+  
 }

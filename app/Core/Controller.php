@@ -41,8 +41,13 @@ class Controller
 	{
 		header_remove(); // Remove previously set headers
 		http_response_code($statusCode); // Set HTTP response code
-		header("Content-Type: application/json"); // Set content type to JSON
-		header("powered-by: Simy Framework V1"); // Set custom header
+		// Enable CORS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+// Set content type to JSON
+header('Content-Type: application/json');
 		echo json_encode($data); // Encode data array to JSON and output
 		exit(); // Exit to stop further execution
 	}

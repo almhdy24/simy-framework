@@ -1,0 +1,9 @@
+[2024-05-09 21:52:26] [ERROR]: Error: Undefined array key "POST" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:52:37] [ERROR]: Error: Undefined array key "POST" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:53:13] [ERROR]: Error: Undefined array key "DELETE" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:53:19] [ERROR]: Error: Undefined array key "POST" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:54:28] [ERROR]: Error: Undefined array key "PUT" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:55:05] [ERROR]: Error: Undefined array key "PUT" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:55:31] [ERROR]: Error: Undefined array key "PUT" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:55:51] [ERROR]: Error: Undefined array key "PUT" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 59
+[2024-05-09 21:58:52] [ERROR]: Error: Undefined array key "PUT" in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 62

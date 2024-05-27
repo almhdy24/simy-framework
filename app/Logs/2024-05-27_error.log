@@ -1,0 +1,1 @@
+[2024-05-27 07:51:18] [ERROR]: Error: class_exists(): Passing null to parameter #1 ($class) of type string is deprecated in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 117

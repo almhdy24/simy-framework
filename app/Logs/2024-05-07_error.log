@@ -1,1 +1,11 @@
 [2024-05-07 08:21:16] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$currentRoute in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 154
+[2024-05-07 08:52:59] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$currentRoute in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 154
+[2024-05-07 11:55:33] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$currentRoute in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 154
+[2024-05-07 11:56:56] [ERROR]: Error: Typed property Almhdy\Simy\Core\Router::$currentRoute must not be accessed before initialization in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 155
+[2024-05-07 12:05:48] [ERROR]: Error: Undefined property: Almhdy\Simy\Core\Router::$request in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 125
+[2024-05-07 12:06:29] [ERROR]: Error: Typed property Almhdy\Simy\Core\Router::$request must not be accessed before initialization in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 125
+[2024-05-07 12:06:48] [ERROR]: Error: Typed property Almhdy\Simy\Core\Router::$request must not be accessed before initialization in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 125
+[2024-05-07 12:07:26] [ERROR]: Error: Call to undefined method Almhdy\Simy\Core\Router::handle() in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 126
+[2024-05-07 12:13:22] [ERROR]: Error: Class "Request" not found in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 123
+[2024-05-07 12:13:46] [ERROR]: Error: Class "Request" not found in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 123
+[2024-05-07 12:38:27] [ERROR]: Error: Undefined variable $middleware in /storage/emulated/0/www/simy-framework/app/Core/Router.php at line 126

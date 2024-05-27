@@ -17,11 +17,6 @@ class AuthController extends Controller
     $this->sessionManager = new SessionManager();
   }
 
-  public function login()
-  {
-    $this->view("templates/header");
-    $this->view("auth/login");
-  }
   public function auth()
   {
     $email = $_POST["email"];
