@@ -1,0 +1,24 @@
+{
+    "name": "almhdy/simy-framework",
+    "description": "Lightweight PHP Framework for Modern Web Development.",
+    "type": "library",
+    "require": {
+         "php": ">=7.4",
+        "phpmailer/phpmailer": "^6.9",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "license": "LGPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Almhdy\\Simy\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "almhdy24",
+            "email": "almhdybdallh24@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

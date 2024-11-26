@@ -1,0 +1,7 @@
+# Ignore vendor directory
+/vendor/
+
+# Ignore other files or directories
+node_modules/
+.DS_Store
+*.log
