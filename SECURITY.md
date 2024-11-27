@@ -1,21 +1,43 @@
 # Security Policy
 
-## Supported Versions
+## Reporting a Vulnerability
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+If you discover a security vulnerability within this project, please follow the instructions below to report it:
+
+1. **Email**: Send an email to [info@simy-framework.com] with details of the issue, including:
+   - A description of the vulnerability
+   - Steps to reproduce the issue (if applicable)
+   - Your contact information
+
+2. **Confidentiality**: We take security seriously. We will acknowledge your report within 48 hours and provide you with a timeline for resolution.
+
+3. **Disclosure Policy**: We acknowledge your contribution to the security of our project and will credit you if you wish.
+
+## Supported Versions
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 1.0.0  | Ongoing support    |
 
-## Reporting a Vulnerability
+## Security Best Practices
 
-Use this section to tell people how to report a vulnerability.
+To help maintain a secure environment while using our framework, we recommend the following best practices:
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+- Always keep your PHP version and related dependencies up to date.
+- Use strong passwords and secure authentication methods.
+- Regularly review and update your code for any vulnerabilities.
+- Employ HTTPS for secure data transmission.
+- Validate and sanitize all user inputs to prevent injection attacks.
+
+## Future Security Versions
+
+For future versions and security patches, please keep an eye on our release notes. We ensure that security vulnerabilities are addressed in a timely manner.
+
+## Additional Resources
+
+For more information on securing your PHP applications, consider exploring:
+
+- [OWASP PHP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/PHP_Security_Cheat_Sheet.html)
+- [PHP Security Best Practices](https://www.phptherightway.com/#security)
+
+Thank you for helping us keep our framework secure.
