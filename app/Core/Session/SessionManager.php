@@ -13,14 +13,19 @@ class SessionManager
   /**
    * Start the session.
    */
-  public function startSession(): void
-  {
-    if ($this->useCookies && !isset($_COOKIE["PHPSESSID"])) {
-      session_start(["use_cookies" => 1]);
-    } else {
-      session_start();
+    public function startSession(): void
+{
+    // Check if a session is not already active
+    if (session_status() === PHP_SESSION_NONE) {
+        // If cookies are to be used and PHPSESSID is not set
+        if ($this->useCookies && !isset($_COOKIE["PHPSESSID"])) {
+            session_start(["use_cookies" => 1]);
+        } else {
+            session_start();
+        }
     }
-  }
+}
+  /**
 
   /**
    * Store data in the session.

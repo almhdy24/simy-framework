@@ -23,14 +23,14 @@ Welcome to Simy Framework! Simy is a powerful and lightweight PHP framework desi
 
 To install Simy Framework, follow these steps:
 
-1. **Download or Clone the Repository**:
+1. **Create a New Project**:
    ```bash
-   git clone https://github.com/almhdy24/simy-framework.git
+   composer create-project almhdy/simy-framework app-name
    ```
 
 2. **Navigate to the Project Directory**:
    ```bash
-   cd simy-framework
+   cd app-name
    ```
 
 3. **Install Dependencies**:
@@ -41,7 +41,6 @@ To install Simy Framework, follow these steps:
 
 4. **Configure Your Application**:
    Modify the configuration settings located in the `app/.env` file to set up your environment (database details, app settings, etc.).
-
 ## Getting Started
 
 To create your first application with Simy Framework:

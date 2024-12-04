@@ -68,7 +68,7 @@ class Files
   public static function upload(
     string $source,
     string $destination = null,
-    int $maxFileSize = 5242880,
+    int $maxFileSize = 5242880, // 5mb
     array $allowedFileTypes = []
   ): string|false {
     if (!is_uploaded_file($source)) {

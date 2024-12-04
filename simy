@@ -1,0 +1,16 @@
+#!/usr/bin/php
+<?php
+if (php_sapi_name() !== "cli") {
+exit();
+}
+
+require_once "vendor/autoload.php";
+use Almhdy\Simy\Core\Command\ServeCommand;
+
+// Check for the command argument
+if (isset($argv[1]) && $argv[1] === "serve") {
+$serveCommand = new ServeCommand();
+$serveCommand->execute();
+} else {
+echo "Usage: php simy serve\n";
+}
