@@ -54,13 +54,13 @@ To create your first application with Simy Framework:
 3. **Build Your Views**:
    Create views within the `app/views/` directory using the templating system provided.
 
-4. **Run Your Application**:
+ **Run Your Application**:
    Start a local PHP server:
    ```bash
-   php -S localhost:8000 -t public
+   php simy serve
    ```
    Visit `http://localhost:8000` in your browser to see your application in action.
-
+   
 ## Documentation
 
 For detailed documentation, examples, and guides, visit our official documentation site:
