@@ -50,7 +50,9 @@ class Router
         $handler = $this->findMatchingRoute($uri, $httpMethod);
 
         if ($handler) {
-            $this->handleMiddleware($uri, $httpMethod, $handler);
+            $this->handleMiddleware($uri, $httpMethod, function() use ($handler) {
+                $this->callHandler($handler);
+            });
         } else {
             $this->handleNotFound();
         }
@@ -127,15 +129,24 @@ class Router
         $this->middleware[$httpMethod][$uri][] = $middleware;
     }
 
-    private function handleMiddleware($uri, $httpMethod, $handler)
+    private function handleMiddleware($uri, $httpMethod, $next)
     {
         if (isset($this->middleware[$httpMethod][$uri])) {
             foreach ($this->middleware[$httpMethod][$uri] as $middleware) {
                 if (is_callable($middleware)) {
                     $middleware();
+                } elseif (
+                    is_array($middleware) &&
+                    count($middleware) == 2 &&
+                    class_exists($middleware[0]) &&
+                    method_exists($middleware[0], $middleware[1])
+                ) {
+                    $controller = new ($middleware[0])();
+                    $method = $middleware[1];
+                    call_user_func_array([$controller, $method], $this->params);
                 }
             }
         }
-        $this->callHandler($handler);
+        $next();
     }
 }

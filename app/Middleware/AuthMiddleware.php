@@ -8,6 +8,7 @@ class AuthMiddleware
 {
   public function handle()
   {
+  
     $session = new SessionManager();
     if (!$session->getSessionData("user")) {
       header("Location: /login");
