@@ -32,7 +32,7 @@ class Migration
 
     public function applyMigration(string $migration): void
     {
-        $path = Config::BASE_DIR . '/app/migrations/' . $migration;
+        $path = Config::BASE_DIR . '/Migrations/' . $migration;
         echo "Reading migration file: $path\n";
         $sql = file_get_contents($path);
         if ($sql === false) {

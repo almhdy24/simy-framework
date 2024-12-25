@@ -13,7 +13,7 @@ class RunMigrationsCommand
         $appliedMigrations = $migration->getAppliedMigrations();
 
         // Define the migrations directory using the Config class
-        $migrationsDir = Config::BASE_DIR . '/app/migrations';
+        $migrationsDir = Config::BASE_DIR . '/Migrations';
 
         // Ensure the migrations directory path is correct
         $migrationsDir = realpath($migrationsDir) ?: $migrationsDir;

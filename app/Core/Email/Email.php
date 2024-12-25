@@ -4,6 +4,7 @@ namespace Almhdy\Simy\Core\Email;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Almhdy\Simy\Core\Translation\Translation;
 
 /**
  * Class Email
@@ -18,86 +19,40 @@ class Email {
     private array $bcc = [];
     private array $attachments = [];
     private array $smtpConfig = [];
+    private string $language;
 
     /**
      * Constructor for Email class
      *
      * @param string $sender The email address of the sender
+     * @param string $language The language for the email
      */
-    public function __construct(string $sender) {
+    public function __construct(string $sender, string $language = 'en') {
         $this->sender = $sender;
+        $this->language = $language;
+        Translation::setLanguage($language);
     }
 
     /**
-     * Set the recipient email address
+     * Load an email template and replace placeholders with actual values
      *
-     * @param string $recipient The email address of the recipient
+     * @param string $templateName The name of the template file (without extension)
+     * @param array $placeholders An associative array of placeholders and their values
      */
-    public function setRecipient(string $recipient): void {
-        if ($this->validateEmail($recipient)) {
-            $this->recipient = $recipient;
-        } else {
-            throw new \InvalidArgumentException('Invalid email address');
+    public function loadTemplate(string $templateName, array $placeholders): void {
+        $templatePath = __DIR__ . "/../../Templates/Emails/{$this->language}/{$templateName}.html";
+
+        if (!file_exists($templatePath)) {
+            throw new \InvalidArgumentException('Template file does not exist');
         }
-    }
 
-    /**
-     * Set the email subject
-     *
-     * @param string $subject The subject of the email
-     */
-    public function setSubject(string $subject): void {
-        $this->subject = $subject;
-    }
+        $templateContent = file_get_contents($templatePath);
 
-    /**
-     * Set the email body
-     *
-     * @param string $body The body of the email
-     */
-    public function setBody(string $body): void {
-        $this->body = $body;
-    }
-
-    /**
-     * Add CC recipient email address
-     *
-     * @param string $email The email address of the CC recipient
-     */
-    public function addCc(string $email): void {
-        if ($this->validateEmail($email)) {
-            $this->cc[] = $email;
+        foreach ($placeholders as $placeholder => $value) {
+            $templateContent = str_replace("{{{$placeholder}}}", $value, $templateContent);
         }
-    }
 
-    /**
-     * Add BCC recipient email address
-     *
-     * @param string $email The email address of the BCC recipient
-     */
-    public function addBcc(string $email): void {
-        if ($this->validateEmail($email)) {
-            $this->bcc[] = $email;
-        }
-    }
-
-    /**
-     * Add attachment to the email
-     *
-     * @param string $filePath The path to the attachment file
-     * @param string $fileName The name of the attachment file
-     */
-    public function addAttachment(string $filePath, string $fileName = ''): void {
-        $this->attachments[] = ['path' => $filePath, 'name' => $fileName];
-    }
-
-    /**
-     * Set SMTP configuration for sending emails
-     *
-     * @param array $config An array containing SMTP configuration parameters
-     */
-    public function setSmtpConfig(array $config): void {
-        $this->smtpConfig = $config;
+        $this->body = $templateContent;
     }
 
     /**
@@ -144,15 +99,5 @@ class Email {
             error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
             return false;
         }
-    }
-
-    /**
-     * Validate an email address
-     *
-     * @param string $email The email address to validate
-     * @return bool Returns true if the email address is valid, false otherwise
-     */
-    private function validateEmail(string $email): bool {
-        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
     }
 }
