@@ -28,6 +28,11 @@ class SqliteDriver implements DatabaseDriverInterface
         // Extract the configuration parameters
         $path = $config['path'];
 
+        // Ensure the directory exists and is writable
+        if (!file_exists($path)) {
+            throw new Exception("SQLite database file does not exist: $path");
+        }
+
         // Build the DSN for the SQLite connection
         $dsn = 'sqlite:' . $path;
 
@@ -41,11 +46,12 @@ class SqliteDriver implements DatabaseDriverInterface
             throw new Exception("SQLite connection error: " . $e->getMessage());
         }
     }
-	/**
-	 * Closes the connection to the SQLite database.
-	 */
-	public function disconnect(): void
-	{
-		$this->connection = null;
-	}
+
+    /**
+     * Closes the connection to the SQLite database.
+     */
+    public function disconnect(): void
+    {
+        $this->connection = null;
+    }
 }

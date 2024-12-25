@@ -2,17 +2,14 @@
 
 namespace Almhdy\Simy\Middleware;
 
-use Almhdy\Simy\Core\Session\SessionManager;
+use Almhdy\Simy\Core\BaseMiddleware;
 
-class AuthMiddleware
+class AuthMiddleware extends BaseMiddleware
 {
-  public function handle()
-  {
-  
-    $session = new SessionManager();
-    if (!$session->getSessionData("user")) {
-      header("Location: /login");
-      exit();
+    public function handle()
+    {
+        if (!$this->isAuthenticated()) {
+            $this->redirect('/login');
+        }
     }
-  }
 }

@@ -1,16 +1,28 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
-if (php_sapi_name() !== "cli") {
-exit();
-}
 
-require_once "vendor/autoload.php";
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Dotenv\Dotenv;
+use Almhdy\Simy\Core\CommandHandler;
 use Almhdy\Simy\Core\Command\ServeCommand;
+use Almhdy\Simy\Core\Command\MakeControllerCommand;
+use Almhdy\Simy\Core\Command\CreateMigrationCommand;
+use Almhdy\Simy\Core\Command\RunMigrationsCommand;
+use Almhdy\Simy\Core\Command\DeleteMigrationCommand;
 
-// Check for the command argument
-if (isset($argv[1]) && $argv[1] === "serve") {
-$serveCommand = new ServeCommand();
-$serveCommand->execute();
-} else {
-echo "Usage: php simy serve\n";
-}
+// Load environment variables from .env file
+$dotenv = Dotenv::createImmutable(__DIR__.'/app');
+$dotenv->load();
+
+$commandHandler = new CommandHandler();
+
+// Register commands
+$commandHandler->registerCommand('make:controller', new MakeControllerCommand());
+$commandHandler->registerCommand('serve', new ServeCommand());
+$commandHandler->registerCommand('create:migration', new CreateMigrationCommand());
+$commandHandler->registerCommand('migrate', new RunMigrationsCommand());
+$commandHandler->registerCommand('migrate:delete', new DeleteMigrationCommand());
+
+// Run the command handler
+$commandHandler->run($argv);

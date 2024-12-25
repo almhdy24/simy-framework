@@ -7,87 +7,86 @@ use Almhdy\Simy\Core\Database\Drivers\PostgresDriver;
 
 class Connection
 {
-	public function connect()
-	{
-		$driver = $_ENV["DB_CONNECTION"];
+    private static $instance;
+    private $driver;
 
-		switch ($driver) {
-			case "mysql":
-				return $this->connectMysql();
-				break;
-			case "sqlite":
-				return $this->connectSqlite();
-				break;
-			case "postgres":
-				return $this->connectPostgres();
-				break;
-			default:
-				throw new \Exception("Unsupported database driver: " . $driver);
-		}
-	}
+    private function __construct()
+    {
+        $driver = $_ENV["DB_CONNECTION"] ?? null;
 
-	private function connectMysql()
-	{
-		$dbHost = $_ENV["DB_HOST"];
-		$dbPort = $_ENV["DB_PORT"];
-		$dbName = $_ENV["DB_DATABASE"];
-		$dbUser = $_ENV["DB_USERNAME"];
-		$dbPass = $_ENV["DB_PASSWORD"];
+        if (!$driver) {
+            throw new \Exception("Database driver not specified in environment variables.");
+        }
 
-		$dbConfig = [
-			"host" => $dbHost,
-			"port" => $dbPort,
-			"database" => $dbName,
-			"username" => $dbUser,
-			"password" => $dbPass,
-		];
+        switch ($driver) {
+            case "mysql":
+                $this->driver = $this->connectMysql();
+                break;
+            case "sqlite":
+                $this->driver = $this->connectSqlite();
+                break;
+            case "postgres":
+                $this->driver = $this->connectPostgres();
+                break;
+            default:
+                throw new \Exception("Unsupported database driver: " . $driver);
+        }
+    }
 
-		return $this->connectWithDriver(new MysqlDriver(), $dbConfig);
-	}
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
-	private function connectSqlite()
-	{
-		$dbPath = $_ENV["DB_DATABASE"]; // Assuming SQLite database file path is defined in the .env file
+    private function connectMysql()
+    {
+        $dbConfig = [
+            "host" => $_ENV["DB_HOST"],
+            "port" => $_ENV["DB_PORT"],
+            "database" => $_ENV["DB_DATABASE"],
+            "username" => $_ENV["DB_USERNAME"],
+            "password" => $_ENV["DB_PASSWORD"],
+        ];
 
-		$dbConfig = [
-			"path" => $dbPath,
-		];
+        return $this->connectWithDriver(new MysqlDriver(), $dbConfig);
+    }
 
-		return $this->connectWithDriver(new SqliteDriver(), $dbConfig);
-	}
+    private function connectSqlite()
+    {
+        $dbConfig = [
+            "path" => $_ENV["DB_DATABASE"],
+        ];
 
-	private function connectPostgres()
-	{
-		$dbHost = $_ENV["DB_HOST"];
-		$dbName = $_ENV["DB_DATABASE"];
-		$dbUser = $_ENV["DB_USERNAME"];
-		$dbPass = $_ENV["DB_PASSWORD"];
+        return $this->connectWithDriver(new SqliteDriver(), $dbConfig);
+    }
 
-		$dbConfig = [
-			"host" => $dbHost,
-			"dbname" => $dbName,
-			"username" => $dbUser,
-			"password" => $dbPass,
-		];
+    private function connectPostgres()
+    {
+        $dbConfig = [
+            "host" => $_ENV["DB_HOST"],
+            "dbname" => $_ENV["DB_DATABASE"],
+            "username" => $_ENV["DB_USERNAME"],
+            "password" => $_ENV["DB_PASSWORD"],
+        ];
 
-		return $this->connectWithDriver(new PostgresDriver(), $dbConfig);
-	}
-	private function connectWithDriver($driver, $dbConfig)
-	{
-		try {
-			// Attempt to connect using the driver
-			$isConnected = $driver->connect($dbConfig);
+        return $this->connectWithDriver(new PostgresDriver(), $dbConfig);
+    }
 
-			if ($isConnected) {
-				return $driver; // Return the connected driver for use
-			} else {
-				throw new \Exception("Failed to connect to the database");
-			}
-		} catch (\PDOException $e) {
-			// Handle connection error
-			// Log the error or throw an exception as per your application's error handling strategy
-			// For example: logError($e->getMessage()); or throw new \Exception($e->getMessage());
-			throw new \Exception($e->getMessage());
-		}
-	}
+    private function connectWithDriver($driver, $dbConfig)
+    {
+        try {
+            $driver->connect($dbConfig);
+            return $driver;
+        } catch (\PDOException $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function getDriver()
+    {
+        return $this->driver;
+    }
 }
