@@ -74,15 +74,56 @@ class Request
     return array_diff_key($inputData, array_flip($keys));
   }
 
+  // Returns all uploaded files
+  public function files(): array
+  {
+    return $_FILES;
+  }
+
+  // Returns specific file input data based on the input name
+  public function file($key = null)
+  {
+    if (is_null($key)) {
+      return $this->files();
+    }
+
+    return $this->files()[$key] ?? null;
+  }
   // Determines if the request is an AJAX request
   public function ajax(): bool
   {
     return !empty($_SERVER["HTTP_X_REQUESTED_WITH"]) &&
       strtolower($_SERVER["HTTP_X_REQUESTED_WITH"]) === "xmlhttprequest";
   }
+
   // Determines if the request is an API request
   public function api()
   {
-    
+    // Check for common API prefixes
+    $isApiPath = strpos($_SERVER["REQUEST_URI"], "/api/") === 0;
+
+    // Check for specific HTTP methods often used in APIs
+    $validMethods = ["GET", "POST", "PUT", "DELETE", "PATCH"];
+    $isApiMethod = in_array($_SERVER["REQUEST_METHOD"], $validMethods);
+
+    // Check for content type for JSON requests, which is common in APIs
+    $isJsonRequest =
+      isset($_SERVER["CONTENT_TYPE"]) &&
+      strpos($_SERVER["CONTENT_TYPE"], "application/json") !== false;
+
+    // Check for API key in headers
+    $apiKeyPresent = isset($_SERVER["HTTP_API_KEY"]);
+    $validApiKey =
+      $apiKeyPresent && $_SERVER["HTTP_API_KEY"] === "your_api_key_here";
+
+    // Optionally, check the request origin if necessary
+    $isCORS =
+      isset($_SERVER["HTTP_ORIGIN"]) &&
+      $_SERVER["HTTP_ORIGIN"] === "trusted_origin_here";
+
+    // Combine the checks to determine if it's an API request
+    return ($isApiPath && $isApiMethod) ||
+      ($validApiKey && $isJsonRequest) ||
+      $isCORS;
   }
 }
