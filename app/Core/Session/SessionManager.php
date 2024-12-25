@@ -10,6 +10,7 @@ class SessionManager
     {
         $this->useCookies = $useCookies;
         $this->configureSession();
+        $this->startSession();
     }
 
     /**
