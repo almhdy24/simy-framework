@@ -30,4 +30,8 @@ class MysqlDriver implements DatabaseDriverInterface
     {
         $this->connection = null;
     }
+    public function prepare($query)
+    {
+        return $this->connection->prepare($query);
+    }
 }

@@ -2,98 +2,143 @@
 
 namespace Almhdy\Simy\Core\Database;
 
-use Almhdy\Simy\Core\Database\Connection;
-use \PDO;
+use PDO;
+use PDOException;
 
 class Query
 {
   protected $connection;
+  protected $table;
+  protected $select = "*";
+  protected $where = [];
+  protected $orderBy = "";
+  protected $limit = "";
+  protected $bindings = [];
 
   /**
    * Constructor to initialize the database connection
    * @param object $connection An object containing the database connection
    */
-  public function __construct($connection)
+  public function __construct(Connection $connection)
   {
-    // Initialize the class property with the database connection
-    $this->connection = $connection->connect()->connection;
-    
+    $this->connection = $connection->getDriver(); // Get the driver from the connection
   }
 
   /**
-   * Selects all rows from the specified table
-   * @param string $table The name of the table to select from
-   * @return array An array containing all rows from the table
+   * Set the table for the query
+   * @param string $table The name of the table
+   * @return $this
    */
-  public function selectAll($table)
+  public function table(string $table)
   {
-    // Prepare and execute a query to select all rows
-    $query = $this->connection->prepare("SELECT * FROM $table");
-    $query->execute();
-
-    // Return all fetched rows
-    return $query->fetchAll();
+    $this->table = $table;
+    return $this;
   }
 
   /**
-   * Selects a single row based on the ID from the specified table
-   * @param string $table The name of the table to select from
-   * @param int $id The ID of the row to retrieve
-   * @return array An array containing the selected row data
+   * Set the columns to select
+   * @param string|array $columns The columns to select
+   * @return $this
    */
-  public function selectOne($table, $id)
+  public function select($columns = "*")
   {
-    // Prepare and execute a query to select a single row based on ID
-    $query = $this->connection->prepare("SELECT * FROM $table WHERE id = ?");
-    $parameters = [$id];
-    $query->execute($parameters);
-
-    // Return the fetched row (or null if not found)
-    return $query->fetch();
+    if (is_array($columns)) {
+      $columns = implode(", ", $columns);
+    }
+    $this->select = $columns;
+    return $this;
   }
 
   /**
-   * Executes a custom query with parameters
-   * @param string $query The custom query to execute
-   * @param array $params An array of parameters to bind to the query
-   * @return mixed The result of the executed query
+   * Add a where clause to the query
+   * @param string $column The column for the condition
+   * @param string $operator The operator for the condition
+   * @param mixed $value The value for the condition
+   * @return $this
    */
-  public function execute($query, $params)
+  public function where(string $column, string $operator, $value)
   {
-    // Execute the custom query with the provided parameters
-    return $this->connection->execute($query, $params);
+    $this->where[] = "$column $operator :$column";
+    $this->bindings[":$column"] = $value;
+    return $this;
   }
+
   /**
-   * Inserts a new row into the specified table with the provided data
+   * Add an order by clause to the query
+   * @param string $column The column to order by
+   * @param string $direction The direction of the order (ASC or DESC)
+   * @return $this
+   */
+  public function orderBy(string $column, string $direction = "ASC")
+  {
+    $this->orderBy = "ORDER BY $column $direction";
+    return $this;
+  }
+
+  /**
+   * Add a limit clause to the query
+   * @param int $limit The number of records to limit
+   * @return $this
+   */
+  public function limit(int $limit)
+  {
+    $this->limit = "LIMIT $limit";
+    return $this;
+  }
+
+  /**
+   * Execute the select query
+   * @return array The result set of the query
+   */
+  public function get()
+  {
+    $sql = "SELECT $this->select FROM $this->table";
+    if (!empty($this->where)) {
+      $sql .= " WHERE " . implode(" AND ", $this->where);
+    }
+    if (!empty($this->orderBy)) {
+      $sql .= " $this->orderBy";
+    }
+    if (!empty($this->limit)) {
+      $sql .= " $this->limit";
+    }
+
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute($this->bindings);
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new PDOException("Error executing query: " . $e->getMessage());
+    }
+  }
+
+  /**
+   * Insert a new row into the specified table with the provided data
    * @param string $table The name of the table to insert into
    * @param array $data An associative array containing column-value pairs for insertion
    * @return array The inserted data
    */
   public function insert($table, $data)
   {
-    // Extract columns and values from the provided data
     $columns = implode(", ", array_keys($data));
     $values = ":" . implode(", :", array_keys($data));
 
-    // Construct the INSERT query with placeholders for values
-    $query = $this->connection->prepare(
-      "INSERT INTO $table ($columns) VALUES ($values)"
-    );
+    $sql = "INSERT INTO $table ($columns) VALUES ($values)";
 
-    // Bind values to the prepared statement
-    foreach ($data as $key => $value) {
-      $query->bindValue(":$key", $value);
+    try {
+      $query = $this->connection->prepare($sql);
+      foreach ($data as $key => $value) {
+        $query->bindValue(":$key", $value);
+      }
+      $query->execute();
+      return $data;
+    } catch (PDOException $e) {
+      throw new PDOException("Error inserting data: " . $e->getMessage());
     }
-
-    // Execute the query to insert the data
-    $query->execute();
-
-    // Return the inserted data
-    return $data;
   }
 
   /**
-   * Updates the row in the specified table with the provided data based on the ID
+   * Update the row in the specified table with the provided data based on the ID
    * @param string $table The name of the table to update
    * @param array $data An associative array containing column-value pairs for update
    * @param int $id The ID of the row to be updated
@@ -101,27 +146,24 @@ class Query
    */
   public function update($table, $data, $id)
   {
-    // Construct the SET clauses for the update query based on the provided data
     $setClauses = [];
     foreach ($data as $column => $value) {
       $setClauses[] = "$column = :$column";
     }
     $setClauses = implode(", ", $setClauses);
-
-    // Append the ID to the data array to update a specific row
     $data["id"] = $id;
 
-    // Prepare the UPDATE query with SET clauses and WHERE condition
-    $query = $this->connection->prepare(
-      "UPDATE $table SET $setClauses WHERE id = :id"
-    );
+    $sql = "UPDATE $table SET $setClauses WHERE id = :id";
 
-    // Execute the update query with the data values
-    $query->execute($data);
-
-    // Return the updated data
-    return $data;
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute($data);
+      return $data;
+    } catch (PDOException $e) {
+      throw new PDOException("Error updating data: " . $e->getMessage());
+    }
   }
+
   /**
    * Deletes a row from the specified table based on the provided ID
    * @param string $table The name of the table to delete from
@@ -130,130 +172,132 @@ class Query
    */
   public function delete($table, $id)
   {
-    // Construct the DELETE query with the WHERE clause based on the ID
-    $query = "DELETE FROM " . $table . " WHERE id = :id";
-
-    // Define the parameters to bind, in this case, only the ID
+    $sql = "DELETE FROM $table WHERE id = :id";
     $params = [":id" => $id];
 
-    // Prepare and execute the delete query with the specified ID
-    $result = $this->connection->prepare($query);
-    $result->execute($params);
-
-    // Check if rows were affected by the delete operation and return true if any row was deleted
-    return $result->rowCount() > 0;
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute($params);
+      return $query->rowCount() > 0;
+    } catch (PDOException $e) {
+      throw new PDOException("Error deleting data: " . $e->getMessage());
+    }
   }
+
   /**
-   * Retrieves data from a table based on the specified conditions using a WHERE clause
-   * @param string $table The name of the table to query
-   * @param array $where An associative array of conditions for the WHERE clause
-   * @return array The result set matching the WHERE conditions
+   * Executes a custom query with parameters
+   * @param string $query The custom query to execute
+   * @param array $params An array of parameters to bind to the query
+   * @return mixed The result of the executed query
    */
-  public function where($table, $where)
+  public function execute($query, $params = [])
   {
-    // Initialize an empty array to store WHERE conditions
-    $wheres = [];
-
-    // Construct the WHERE clause based on the key-value pairs in the $where array
-    foreach ($where as $key => $value) {
-      $wheres[] = "$key = :$key";
+    try {
+      $stmt = $this->connection->prepare($query);
+      $stmt->execute($params);
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new PDOException(
+        "Error executing custom query: " . $e->getMessage()
+      );
     }
+  }
 
-    // Join the individual WHERE conditions with 'AND' to form the complete WHERE clause
-    $whereClause = implode(" AND ", $wheres);
+  /**
+   * Method to perform INNER JOIN between two tables
+   * @param string $mainTable The primary table
+   * @param string $secondaryTable The table to join
+   * @param string $joinCondition The condition on which to join
+   * @return array The result set of the join operation
+   */
+  public function innerJoin($mainTable, $secondaryTable, $joinCondition)
+  {
+    $sql = "SELECT * FROM $mainTable INNER JOIN $secondaryTable ON $joinCondition";
 
-    // Prepare the SELECT query with the WHERE clause
-    $query = $this->connection->prepare(
-      "SELECT * FROM $table WHERE $whereClause"
-    );
-
-    // Bind values to the prepared statement for each condition in the $where array
-    foreach ($where as $key => $value) {
-      $query->bindValue(":$key", $value);
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new PDOException("Error executing inner join: " . $e->getMessage());
     }
-
-    // Execute the SELECT query
-    $query->execute();
-
-    // Fetch all rows as an associative array
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-    // Return the result set matching the WHERE conditions
-    return $result;
   }
-  // Method to perform INNER JOIN between two tables
-  public function innerJoinTables($mainTable, $secondaryTable, $joinCondition)
+
+  /**
+   * Method to perform LEFT JOIN between two tables
+   * @param string $mainTable The primary table
+   * @param string $secondaryTable The table to join
+   * @param string $joinCondition The condition on which to join
+   * @return array The result set of the join operation
+   */
+  public function leftJoin($mainTable, $secondaryTable, $joinCondition)
   {
-    // Construct the SQL query with the INNER JOIN operation
-    $query = $this->connection->prepare(
-      "SELECT * FROM $mainTable INNER JOIN $secondaryTable ON $joinCondition"
-    );
+    $sql = "SELECT * FROM $mainTable LEFT JOIN $secondaryTable ON $joinCondition";
 
-    // Execute the query
-    $query->execute();
-
-    // Return the result of the INNER JOIN operation
-    return $query->fetchAll();
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new PDOException("Error executing left join: " . $e->getMessage());
+    }
   }
-  // Method to perform LEFT JOIN between two tables
-  public function leftJoinTables($mainTable, $secondaryTable, $joinCondition)
+
+  /**
+   * Method to perform RIGHT JOIN between two tables
+   * @param string $mainTable The primary table
+   * @param string $secondaryTable The table to join
+   * @param string $joinCondition The condition on which to join
+   * @return array The result set of the join operation
+   */
+  public function rightJoin($mainTable, $secondaryTable, $joinCondition)
   {
-    // Construct the SQL query with the LEFT JOIN operation
-    $query = $this->connection->prepare(
-      "SELECT * FROM $mainTable LEFT JOIN $secondaryTable ON $joinCondition"
-    );
+    $sql = "SELECT * FROM $mainTable RIGHT JOIN $secondaryTable ON $joinCondition";
 
-    // Execute the query
-    $query->execute();
-
-    // Return the result of the LEFT JOIN operation
-    return $query->fetchAll();
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new PDOException("Error executing right join: " . $e->getMessage());
+    }
   }
 
-  // Method to perform RIGHT JOIN between two tables
-  public function rightJoinTables($mainTable, $secondaryTable, $joinCondition)
+  /**
+   * Method to perform OUTER JOIN between two tables
+   * @param string $mainTable The primary table
+   * @param string $secondaryTable The table to join
+   * @param string $joinCondition The condition on which to join
+   * @return array The result set of the join operation
+   */
+  public function outerJoin($mainTable, $secondaryTable, $joinCondition)
   {
-    // Construct the SQL query with the RIGHT JOIN operation
-    $query = $this->connection->prepare(
-      "SELECT * FROM $mainTable RIGHT JOIN $secondaryTable ON $joinCondition"
-    );
+    $sql = "SELECT * FROM $mainTable LEFT JOIN $secondaryTable ON $joinCondition UNION SELECT * FROM $mainTable RIGHT JOIN $secondaryTable ON $joinCondition";
 
-    // Execute the query
-    $query->execute();
-
-    // Return the result of the RIGHT JOIN operation
-    return $query->fetchAll();
+    try {
+      $query = $this->connection->prepare($sql);
+      $query->execute();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+      throw new PDOException("Error executing outer join: " . $e->getMessage());
+    }
   }
-  // Method to perform OUTER JOIN between two tables
-  public function outerJoinTables($mainTable, $secondaryTable, $joinCondition)
-  {
-    // Construct the SQL query with the FULL OUTER JOIN operation (Note: FULL OUTER JOIN is not directly supported in MySQL)
-    $query = $this->connection->prepare(
-      "SELECT * FROM $mainTable LEFT JOIN $secondaryTable ON $joinCondition UNION SELECT * FROM $mainTable RIGHT JOIN $secondaryTable ON $joinCondition"
-    );
 
-    // Execute the query
-    $query->execute();
-
-    // Return the result of the OUTER JOIN operation
-    return $query->fetchAll();
-  }
-  // Method to execute a user-provided custom SQL query
+  /**
+   * Method to execute a user-provided custom SQL query
+   * @param string $sqlQuery The custom SQL query
+   * @return mixed The result of the executed query
+   */
   public function customQuery($sqlQuery)
   {
     try {
-      // Prepare the user-provided custom SQL query
       $query = $this->connection->prepare($sqlQuery);
-
-      // Execute the query
       $query->execute();
-
-      // Return the result of the custom SQL query
-      return $query->fetchAll();
+      return $query->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-      // Handle any exceptions that occur during query execution
-      echo "Error executing custom query: " . $e->getMessage();
-      return false;
+      throw new PDOException(
+        "Error executing custom query: " . $e->getMessage()
+      );
     }
   }
 }

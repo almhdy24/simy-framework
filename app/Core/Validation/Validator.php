@@ -4,6 +4,7 @@ namespace Almhdy\Simy\Core\Validation;
 
 use Almhdy\Simy\Core\Validation\ValidationRules;
 use Almhdy\Simy\Core\Validation\CustomMessage;
+use Almhdy\Simy\Core\Translation\Translation;
 
 class Validator
 {
@@ -11,11 +12,14 @@ class Validator
     protected ValidationRules $validationRules;
     protected CustomMessage $customMessages;
     protected array $customValidations = [];
+    protected string $language;
 
-    public function __construct()
+    public function __construct(string $language = 'en')
     {
         $this->validationRules = new ValidationRules();
         $this->customMessages = new CustomMessage();
+        $this->language = $language;
+        Translation::setLanguage($this->language);
     }
 
     public function extend(string $ruleName, callable $callback): void
@@ -48,13 +52,14 @@ class Validator
                         $customErrorMessage = $this->customMessages->getCustomErrorMessage(
                             $field,
                             $ruleName,
-                            $params
+                            $params,
+                            $this->language
                         );
                         $fieldErrors[] = $customErrorMessage;
                         $isValid = false;
                     }
                 } else {
-                    $fieldErrors[] = "Validation rule $ruleName not found for $field.";
+                    $fieldErrors[] = Translation::get("validation_rule_not_found", ['field' => $field, 'rule' => $ruleName]);
                     $isValid = false;
                 }
             }

@@ -12,8 +12,7 @@ class Response
     // Method to respond with a JSON payload
     public static function json(array $data, int $status = 200): void
     {
-        header("Content-Type: application/json");
-        http_response_code($status);
+        self::setHeaders('application/json', $status);
         echo json_encode($data);
         exit();
     }
@@ -22,7 +21,7 @@ class Response
     public static function download(string $filePath): void
     {
         if (file_exists($filePath)) {
-            header("Content-Type: application/octet-stream");
+            self::setHeaders('application/octet-stream', 200);
             header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
             readfile($filePath);
             exit();
@@ -38,7 +37,7 @@ class Response
             $imageData = file_get_contents($filePath);
             $imageType = exif_imagetype($filePath);
             $contentType = image_type_to_mime_type($imageType);
-            header("Content-Type: " . $contentType);
+            self::setHeaders($contentType, 200);
             echo $imageData;
             exit();
         } else {
@@ -49,8 +48,7 @@ class Response
     // Method to respond with plain text
     public static function text(string $content, int $status = 200): void
     {
-        header("Content-Type: text/plain");
-        http_response_code($status);
+        self::setHeaders('text/plain', $status);
         echo $content;
         exit();
     }
@@ -65,25 +63,31 @@ class Response
     // Method to respond with HTML content
     public static function html(string $content, int $status = 200): void
     {
-        header("Content-Type: text/html");
-        http_response_code($status);
+        self::setHeaders('text/html', $status);
         echo $content;
         exit();
     }
 
     // Method to respond with a 500 Internal Server Error
-    public static function serverError(): void
+    public static function serverError(string $message = '500 Internal Server Error'): void
     {
-        http_response_code(500);
-        echo "500 Internal Server Error";
+        self::setHeaders('text/plain', 500);
+        echo $message;
         exit();
     }
 
     // Method to respond with a 404 Not Found error
-    public static function notFound(): void
+    public static function notFound(string $message = '404 Not Found'): void
     {
-        http_response_code(404);
-        echo "404 Not Found";
+        self::setHeaders('text/plain', 404);
+        echo $message;
         exit();
+    }
+
+    // Private method to set headers
+    private static function setHeaders(string $contentType, int $status): void
+    {
+        header("Content-Type: " . $contentType);
+        http_response_code($status);
     }
 }

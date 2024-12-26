@@ -1,4 +1,5 @@
 <?php
+
 namespace Almhdy\Simy\Core\Database;
 
 use Almhdy\Simy\Core\Database\Drivers\MysqlDriver;
