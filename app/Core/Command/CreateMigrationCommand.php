@@ -16,7 +16,7 @@ class CreateMigrationCommand
         }
 
         $timestamp = date('Y_m_d_His');
-        $filename = Config::BASE_DIR . '/Migrations/' . "{$timestamp}_{$name}.sql";
+        $filename = dirname(Config::BASE_DIR) . '/Migrations/' . "{$timestamp}_{$name}.sql";
 
         $template = "-- Migration: $name\n-- Created at: $timestamp\n\n-- Write your migration SQL here\n";
 
